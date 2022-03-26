@@ -3,6 +3,8 @@ const path = require("path");
 const express = require ('express');
 const PORT = process.env.PORT || 3001;
 const app = express();
+//to serve js and css files 
+app.use(express.static('public'));
 //parse incoming string or array data
 app.use(express.urlencoded({extended: true}));
 //parse incoming JSON data
@@ -99,11 +101,27 @@ app.get('/api/animals/:id',(req, res)=>{
     }
 })
 
+app.get('/', (req, res)=>{
+    res.sendFile(path.join(__dirname, './public/index.html'));
+})
+
+app.get('/animals', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/animals.html'));
+});
+
+app.get('/zookeepers', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/zookeepers.html'));
+});
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/index.html'));
+});
+
 app.post('/api/animals', (req, res)=>{
     // req.body is where our incoming content will be
   console.log(req.body);
   //set id based on what the next index of the array will be
-//   req.body.id = animals.length.toString();
+  req.body.id = animals.length.toString();
 //     add animal to json file and animals array in the fxn
 //     const animal = createNewAnimal(req.body, animals)
 // if any data in req.body is incorrect, send 400 error back
